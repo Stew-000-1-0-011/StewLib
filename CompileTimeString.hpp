@@ -1,3 +1,10 @@
+/*
+
+多分重すぎて使い物にならない。あとRank.hppとEnumerate.hppがどっかに行っちゃった。
+
+*/
+#if 0
+
 #pragma once
 
 // C++14想定
@@ -157,3 +164,5 @@ namespace StewStringCpp14
         return ret;
     }
 }
+
+#endif
