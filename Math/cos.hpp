@@ -22,29 +22,7 @@ namespace StewLib
             template<class T>
             struct FuncCos final
             {
-                static constexpr auto cos(const double x) noexcept
-                {
-                    /// TODO: GNU拡張の除去
-                    return std::cos(x);
-                }
-            };
-
-            template<class T>
-            requires std::floating_point<T> && is_lower_cost_than_ref<T>
-            struct FuncCos<T> final
-            {
-                static constexpr auto cos(const T x) noexcept
-                {
-                    /// TODO: GNU拡張の除去
-                    return std::cos(x);
-                }
-            };
-
-            template<class T>
-            requires std::floating_point<T>
-            struct FuncCos<T> final
-            {
-                static constexpr auto cos(const T& x) noexcept
+                static constexpr auto cos(const low_cost_ref_val_t<T> x) noexcept
                 {
                     /// TODO: GNU拡張の除去
                     return std::cos(x);
@@ -52,7 +30,7 @@ namespace StewLib
             };
 
             template<typename T>
-            inline constexpr auto cos(const T& x) noexcept
+            inline constexpr auto cos(const low_cost_ref_val_t<T> x) noexcept
             {
                 return FuncCos<T>::cos(x);
             }

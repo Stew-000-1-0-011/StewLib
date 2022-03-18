@@ -194,8 +194,8 @@ namespace StewLib
                 {
                     static constexpr auto rot(const Vec2D<T>& vec2d, const Arg angle) noexcept
                     {
-                        const auto cos_angle = cos(angle);
-                        const auto sin_angle = sin(angle);
+                        const auto cos_angle = cos<Arg>(angle);
+                        const auto sin_angle = sin<Arg>(angle);
                         const auto tmp_x = vec2d.x * cos_angle - vec2d.y * sin_angle;
                         const auto tmp_y = vec2d.x * sin_angle + vec2d.y * cos_angle;
                         static_assert(std::is_same_v<decltype(tmp_x), decltype(tmp_y)>);

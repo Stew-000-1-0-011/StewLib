@@ -22,29 +22,7 @@ namespace StewLib
             template<class T>
             struct FuncSin final
             {
-                static constexpr auto sin(const double x) noexcept
-                {
-                    /// TODO: GNU拡張の除去
-                    return std::sin(x);
-                }
-            };
-
-            template<class T>
-            requires std::floating_point<T> && is_lower_cost_than_ref<T>
-            struct FuncSin<T> final
-            {
-                static constexpr auto sin(const T x) noexcept
-                {
-                    /// TODO: GNU拡張の除去
-                    return std::sin(x);
-                }
-            };
-
-            template<class T>
-            requires std::floating_point<T>
-            struct FuncSin<T> final
-            {
-                static constexpr auto sin(const T x) noexcept
+                static constexpr auto sin(const low_cost_ref_val_t<T> x) noexcept
                 {
                     /// TODO: GNU拡張の除去
                     return std::sin(x);
@@ -52,7 +30,7 @@ namespace StewLib
             };
 
             template<typename T>
-            inline constexpr auto sin(const T& x) noexcept
+            inline constexpr auto sin(const low_cost_ref_val_t<T> x) noexcept
             {
                 return FuncSin<T>::sin(x);
             }
