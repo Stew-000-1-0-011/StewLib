@@ -2,6 +2,8 @@
 
 // GNU独自拡張前提(cmath関数のconstexpr化はよ)
 
+/// TODO: StewLib::low_cost_ref_val_t を使って書き換え。
+
 /*
 要素が二つのベクトル。
 諸々の操作を行うとき、例外を吐いてはいけない。
