@@ -13,9 +13,6 @@
 // C++14想定
 #include <cstdint>
 #include <type_traits>
-// debug
-#include <iostream>
-#include <cmath>
 
 #include "Rank.hpp"
 #include "Enumerate.hpp"
