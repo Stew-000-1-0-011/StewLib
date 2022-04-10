@@ -8,6 +8,7 @@
 #include <algorithm>
 
 #include "judge_lower_cost_than_ref.hpp"
+#include "none.hpp"
 
 namespace StewLib
 {
@@ -33,12 +34,19 @@ namespace StewLib
 
             void reverse() noexcept
             {
-                std::reverse(std::execution::par_unseq, buffer, buffer + size);
+                if constexpr(size > /* TODO: */100)
+                {
+                    std::reverse(std::execution::par_unseq, buffer, buffer + size);
+                }
+                else
+                {
+                    std::reverse(std::execution::seq, buffer, buffer + size);
+                }
 
                 is_reversed = !is_reversed;
             }
 
-            operator T() const noexcept
+            explicit operator T() const noexcept
             {
                 T ret;
                 std::memcpy(&ret, buffer, sizeof(T));

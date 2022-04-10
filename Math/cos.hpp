@@ -8,7 +8,6 @@
 #pragma once
 
 #include <cmath>
-#include <concepts>
 
 #include "../judge_lower_cost_than_ref.hpp"
 

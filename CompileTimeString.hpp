@@ -3,6 +3,9 @@
 多分重すぎて使い物にならない。あとRank.hppとEnumerate.hppがどっかに行っちゃった。
 
 */
+
+#error "Too heavy to use."
+
 #if 0
 
 #pragma once

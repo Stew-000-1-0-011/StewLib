@@ -9,7 +9,7 @@ namespace StewLib
 {
     namespace
     {
-        template<std::size_t unit_size_, class RawData_>
+        template<class RawData_, std::size_t unit_size_>
         struct Serialize final
         {
             using RawData = RawData_;
@@ -24,7 +24,11 @@ namespace StewLib
             {
                 std::memcpy(chunks, &raw_data, sizeof(RawData));
             }
-        };
 
+            explicit operator RawData&() noexcept
+            {
+                return *static_cast<RawData *>(chunks);
+            }
+        };
     }
 }

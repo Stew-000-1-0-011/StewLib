@@ -17,6 +17,7 @@
 
 #include <cmath>
 #include <utility>
+#include <ostream>
 
 #include "cos.hpp"
 #include "sin.hpp"
@@ -35,6 +36,7 @@ namespace StewLib
                 Type x;
                 Type y;
 
+#ifdef __cpp_concepts
                 template<class Tx, class Ty>
                 requires (!is_lower_cost_than_ref<Tx> || !is_lower_cost_than_ref<Ty>)
                 constexpr Vec2D(const Tx& x, const Ty& y) noexcept:
@@ -47,6 +49,13 @@ namespace StewLib
                     x{static_cast<Type>(x)},
                     y{static_cast<Type>(y)}
                 {}
+#else
+                template<class Tx, class Ty>
+                constexpr Vec2D(const Tx& x, const Ty& y) noexcept:
+                    x{static_cast<Type>(x)},
+                    y{static_cast<Type>(y)}
+                {}
+#endif
 
                 Vec2D() = default;
                 Vec2D(const Vec2D&) = default;
@@ -119,13 +128,17 @@ namespace StewLib
                 }
             };
 
+#ifdef __cpp_concepts
             template<class Tx, class Ty>
             requires (!is_lower_cost_than_ref<Tx> || !is_lower_cost_than_ref<Ty>)
             Vec2D(const Tx&, const Ty&) -> Vec2D<std::common_type_t<Tx, Ty>>;
 
             template<is_lower_cost_than_ref Tx, is_lower_cost_than_ref Ty>
             Vec2D(const Tx, const Ty) -> Vec2D<std::common_type_t<Tx, Ty>>;
-
+#else
+            template<class Tx, class Ty>
+            Vec2D(const Tx&, const Ty&) -> Vec2D<std::common_type_t<Tx, Ty>>;
+#endif
 
             template<typename TL, typename TR>
             constexpr inline auto operator+(const Vec2D<TL>& l, const Vec2D<TR>& r) noexcept -> Vec2D<decltype(l.x + r.x)>
@@ -191,6 +204,7 @@ namespace StewLib
                     }
                 };
 
+#ifdef __cpp_concepts
                 template<class T, is_lower_cost_than_ref Arg>
                 struct FuncRot<T, Arg> final
                 {
@@ -204,9 +218,12 @@ namespace StewLib
                         return Vec2D<std::remove_cvref_t<decltype(tmp_x)>>(tmp_x, tmp_y);
                     }
                 };
+#endif
 
                 template<class T>
+#ifdef __cpp_concepts
                 requires std::is_arithmetic_v<T>
+#endif
                 struct FuncGetAngle final
                 {
                     static constexpr auto get_angle(const Vec2D<T>& vec2d) noexcept
@@ -226,7 +243,9 @@ namespace StewLib
                 // };
 
                 template<class T>
+#ifdef __cpp_concepts
                 requires std::is_arithmetic_v<T>
+#endif
                 struct FuncNorm final
                 {
                     static constexpr auto norm(const Vec2D<T>& vec2d) noexcept
