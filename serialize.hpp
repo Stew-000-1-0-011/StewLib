@@ -15,10 +15,12 @@ namespace StewLib
             using RawData = RawData_;
             constexpr static std::size_t unit_size = unit_size_;
 
-            static constexpr std::size_t chunks_size = sizeof(RawData) / unit_size_ + (sizeof(RawData) % unit_size)? 1 : 0;
-            static constexpr std::uint8_t last_size = (sizeof(RawData) % unit_size) ? (sizeof(RawData) % unit_size) : 8;
+            // RawDataを格納できるのに十分な大きさのチャンク数(1チャンクは1byte * unit_size)
+            static constexpr std::size_t chunks_size = sizeof(RawData) / unit_size_ + (sizeof(RawData) % unit_size_)? 1 : 0;
+            // 最後のチャンクのうち有効なチャンクのバイト数
+            static constexpr std::uint8_t last_size = (sizeof(RawData) % unit_size_) ? (sizeof(RawData) % unit_size_) : unit_size_;
 
-            std::uint8_t chunks[chunks_size][unit_size]{};
+            std::uint8_t chunks[chunks_size][unit_size_]{};
 
             Serialize(const low_cost_ref_val_t<RawData> raw_data)
             {

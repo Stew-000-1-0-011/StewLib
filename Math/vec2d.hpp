@@ -34,7 +34,7 @@ namespace StewLib
                 Type x;
                 Type y;
 
-#ifdef __cpp_concepts
+#ifdef __cpp_lib_concepts
                 template<class Tx, class Ty>
                 requires (!is_lower_cost_than_ref<Tx> || !is_lower_cost_than_ref<Ty>)
                 constexpr Vec2D(const Tx& x, const Ty& y) noexcept:
@@ -126,7 +126,7 @@ namespace StewLib
                 }
             };
 
-#ifdef __cpp_concepts
+#ifdef __cpp_lib_concepts
             template<class Tx, class Ty>
             requires (!is_lower_cost_than_ref<Tx> || !is_lower_cost_than_ref<Ty>)
             Vec2D(const Tx&, const Ty&) -> Vec2D<std::common_type_t<Tx, Ty>>;
@@ -202,7 +202,7 @@ namespace StewLib
                     }
                 };
 
-#ifdef __cpp_concepts
+#ifdef __cpp_lib_concepts
                 template<class T, is_lower_cost_than_ref Arg>
                 struct FuncRot<T, Arg> final
                 {

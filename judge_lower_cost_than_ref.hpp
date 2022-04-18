@@ -46,7 +46,7 @@ namespace StewLib
 
 #endif
 
-#ifdef __cpp_concepts
+#ifdef __cpp_lib_concepts
         template<class T>
         concept is_lower_cost_than_ref =
         is_smaller_than_ref<T> && std::is_trivially_copy_constructible_v<T> &&
@@ -101,6 +101,6 @@ namespace StewLib
     }
 }
 
-#ifndef __cpp_concepts
-Stew_static_warn(false, "It is hard to use this file without concepts.");
+#ifndef __cpp_lib_concepts
+Stew_static_warn(false, "It is hard to use this file without lib concepts.");
 #endif
