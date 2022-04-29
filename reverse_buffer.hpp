@@ -1,3 +1,5 @@
+// C++23以降はstd::bitswapを用いること。
+
 #pragma once
 
 #include <cstddef>
@@ -8,7 +10,11 @@
 #include <algorithm>
 
 #include "judge_lower_cost_than_ref.hpp"
-#include "none.hpp"
+#include "static_warn.hpp"
+
+#if __cplusplus >= 202300L
+Stew_static_warn("Stew: you should use std::bitswap.");
+#endif
 
 namespace StewLib
 {
