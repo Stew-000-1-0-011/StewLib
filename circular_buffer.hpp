@@ -14,132 +14,129 @@
 
 namespace StewLib
 {
-    namespace
+    template<template<class ...> class Container, class T, class Allocator = std::allocator<T>>
+    class CircularBuffer final
     {
-        template<template<class ...> class Container, class T, class Allocator = std::allocator<T>>
-        class CircularBuffer final
+    public:
+        using BufferType = Container<T, Allocator>;
+
+    private:
+        BufferType buffer;
+        BufferType::iterator iter{buffer.begin()};
+        std::size_t count{};
+
+    public:
+        template<class ... Args>
+        constexpr CircularBuffer(Args&& ... args) noexcept:
+            buffer(args ...)
+        {}
+
+        CircularBuffer(const CircularBuffer&) = default;
+        CircularBuffer(CircularBuffer&&) = default;
+        CircularBuffer& operator=(const CircularBuffer&) = default;
+        CircularBuffer& operator=(CircularBuffer&&) = default;
+
+        template<class U>
+        void push(U&& obj) noexcept
         {
-        public:
-            using BufferType = Container<T, Allocator>;
-
-        private:
-            BufferType buffer;
-            BufferType::iterator iter{buffer.begin()};
-            std::size_t count{};
-
-        public:
-            template<class ... Args>
-            constexpr CircularBuffer(Args&& ... args) noexcept:
-                buffer(args ...)
-            {}
-
-            CircularBuffer(const CircularBuffer&) = default;
-            CircularBuffer(CircularBuffer&&) = default;
-            CircularBuffer& operator=(const CircularBuffer&) = default;
-            CircularBuffer& operator=(CircularBuffer&&) = default;
-
-            template<class U>
-            void push(U&& obj) noexcept
+            if(const auto size = buffer.size(); ++count > size)
             {
-                if(const auto size = buffer.size(); ++count > size)
-                {
-                    count = size;
-                }
-
-                *iter = std::forward<U>(obj);
-                if(++iter == buffer.end())
-                {
-                    iter = buffer.begin();
-                }
+                count = size;
             }
 
-            T pop() noexcept
+            *iter = std::forward<U>(obj);
+            if(++iter == buffer.end())
             {
-                --count;
-
-                if(--iter == buffer.begin() - 1)
-                {
-                    iter = buffer.end() - 1;
-                }
-
-                return std::move(*iter);
+                iter = buffer.begin();
             }
+        }
 
-            void clear() noexcept
-            {
-                count = 0;
-            }
-            
-            BufferType& get_buffer() noexcept
-            {
-                return buffer;
-            }
-        };
-
-        template<template<class ...> class Container, class T, class Allocator = std::allocator<T>>
-        class SafeCircularBuffer final
+        T pop() noexcept
         {
-        public:
-            using BufferType = Container<T, Allocator>;
+            --count;
 
-        private:
-            BufferType buffer;
-            BufferType::iterator iter{buffer.begin()};
-            std::size_t count{};
-
-        public:
-            template<class ... Args>
-            constexpr SafeCircularBuffer(Args&& ... args) noexcept:
-                buffer(args ...)
-            {}
-
-            SafeCircularBuffer(const SafeCircularBuffer&) = default;
-            SafeCircularBuffer(SafeCircularBuffer&&) = default;
-            SafeCircularBuffer& operator=(const SafeCircularBuffer&) = default;
-            SafeCircularBuffer& operator=(SafeCircularBuffer&&) = default;
-
-            template<class U>
-            void push(U&& obj) noexcept
+            if(--iter == buffer.begin() - 1)
             {
-                
-                if(const auto size = buffer.size(); ++count > size)
-                {
-                    count = size;
-                }
-
-                *iter = std::forward<U>(obj);
-                if(++iter == buffer.end())
-                {
-                    iter = buffer.begin();
-                }
+                iter = buffer.end() - 1;
             }
 
-            std::optional<T> pop() noexcept
-            {
-                if(!count)
-                {
-                    return std::nullopt;
-                }
+            return std::move(*iter);
+        }
 
-                --count;
+        void clear() noexcept
+        {
+            count = 0;
+        }
+        
+        BufferType& get_buffer() noexcept
+        {
+            return buffer;
+        }
+    };
 
-                if(--iter == buffer.begin() - 1)
-                {
-                    iter = buffer.end() - 1;
-                }
+    template<template<class ...> class Container, class T, class Allocator = std::allocator<T>>
+    class SafeCircularBuffer final
+    {
+    public:
+        using BufferType = Container<T, Allocator>;
 
-                return std::move(*iter);
-            }
+    private:
+        BufferType buffer;
+        BufferType::iterator iter{buffer.begin()};
+        std::size_t count{};
+
+    public:
+        template<class ... Args>
+        constexpr SafeCircularBuffer(Args&& ... args) noexcept:
+            buffer(args ...)
+        {}
+
+        SafeCircularBuffer(const SafeCircularBuffer&) = default;
+        SafeCircularBuffer(SafeCircularBuffer&&) = default;
+        SafeCircularBuffer& operator=(const SafeCircularBuffer&) = default;
+        SafeCircularBuffer& operator=(SafeCircularBuffer&&) = default;
+
+        template<class U>
+        void push(U&& obj) noexcept
+        {
             
-            BufferType& get_buffer() noexcept
+            if(const auto size = buffer.size(); ++count > size)
             {
-                return buffer;
+                count = size;
             }
 
-            void clear() noexcept
+            *iter = std::forward<U>(obj);
+            if(++iter == buffer.end())
             {
-                count = 0;
+                iter = buffer.begin();
             }
-        };
-    }
+        }
+
+        std::optional<T> pop() noexcept
+        {
+            if(!count)
+            {
+                return std::nullopt;
+            }
+
+            --count;
+
+            if(--iter == buffer.begin() - 1)
+            {
+                iter = buffer.end() - 1;
+            }
+
+            return std::move(*iter);
+        }
+        
+        BufferType& get_buffer() noexcept
+        {
+            return buffer;
+        }
+
+        void clear() noexcept
+        {
+            count = 0;
+        }
+    };
 }

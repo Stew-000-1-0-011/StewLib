@@ -2,10 +2,7 @@
 
 namespace StewLib
 {
-    namespace
-    {
-        struct None_{};
+    struct None_{};
 
-        using None = None_;
-    }
+    using None = None_;
 }

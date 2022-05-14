@@ -4,28 +4,25 @@
 \
 namespace StewLib\
 {\
-    namespace\
+    namespace HasMemberImplement\
     {\
-\
-        namespace HasMemberImplement\
+        template<class T>\
+        static constexpr auto has_##func_name(int) noexcept -> decltype(&T::member, bool())\
         {\
-            template<class T>\
-            static constexpr auto has_##func_name(int) noexcept -> decltype(&T::member, bool())\
-            {\
-                return true;\
-            }\
-\
-            template<class T>\
-            static constexpr bool has_##func_name(double) noexcept\
-            {\
-                return false;\
-            }\
+            return true;\
         }\
 \
-        namespace HasMember\
+        template<class T>\
+        static constexpr bool has_##func_name(double) noexcept\
         {\
-            template<class T>\
-            inline constexpr bool has_##func_name##_v = HasMemberImplement::has_##func_name<T>(0);\
+            return false;\
         }\
     }\
-}
+\
+    namespace HasMember\
+    {\
+        template<class T>\
+        inline constexpr bool has_##func_name##_v = HasMemberImplement::has_##func_name<T>(0);\
+    }\
+}\
+

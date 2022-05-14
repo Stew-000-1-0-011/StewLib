@@ -14,33 +14,30 @@
 
 namespace StewLib
 {
-    namespace
+    namespace Math
     {
-        namespace Math
+        template<class T>
+        struct FuncCos final
         {
-            template<class T>
-            struct FuncCos final
-            {
 #ifdef __cpp_lib_concepts
-                static constexpr auto cos(const low_cost_ref_val_t<T> x) noexcept
+            static constexpr auto cos(const low_cost_ref_val_t<T> x) noexcept
 #else
-                static constexpr auto cos(const T& x) noexcept
-#endif
-                {
-                    /// TODO: GNU拡張の除去
-                    return std::cos(x);
-                }
-            };
-
-            template<typename T>
-#ifdef __cpp_lib_concepts
-            inline constexpr auto cos(const low_cost_ref_val_t<T> x) noexcept
-#else
-            inline constexpr auto cos(const T& x) noexcept
+            static constexpr auto cos(const T& x) noexcept
 #endif
             {
-                return FuncCos<T>::cos(x);
+                /// TODO: GNU拡張の除去
+                return std::cos(x);
             }
+        };
+
+        template<typename T>
+#ifdef __cpp_lib_concepts
+        inline constexpr auto cos(const low_cost_ref_val_t<T> x) noexcept
+#else
+        inline constexpr auto cos(const T& x) noexcept
+#endif
+        {
+            return FuncCos<T>::cos(x);
         }
     }
 }

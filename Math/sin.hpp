@@ -14,33 +14,30 @@
 
 namespace StewLib
 {
-    namespace
+    namespace Math
     {
-        namespace Math
+        template<class T>
+        struct FuncSin final
         {
-            template<class T>
-            struct FuncSin final
-            {
 #ifdef __cpp_lib_concepts
-                static constexpr auto sin(const low_cost_ref_val_t<T> x) noexcept
+            static constexpr auto sin(const low_cost_ref_val_t<T> x) noexcept
 #else
-                static constexpr auto sin(const T& x) noexcept
-#endif
-                {
-                    /// TODO: GNU拡張の除去
-                    return std::sin(x);
-                }
-            };
-
-            template<typename T>
-#ifdef __cpp_lib_concepts
-            inline constexpr auto sin(const low_cost_ref_val_t<T> x) noexcept
-#else
-            inline constexpr auto sin(const T& x) noexcept
+            static constexpr auto sin(const T& x) noexcept
 #endif
             {
-                return FuncSin<T>::sin(x);
+                /// TODO: GNU拡張の除去
+                return std::sin(x);
             }
+        };
+
+        template<typename T>
+#ifdef __cpp_lib_concepts
+        inline constexpr auto sin(const low_cost_ref_val_t<T> x) noexcept
+#else
+        inline constexpr auto sin(const T& x) noexcept
+#endif
+        {
+            return FuncSin<T>::sin(x);
         }
     }
 }

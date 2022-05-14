@@ -18,46 +18,43 @@ Stew_static_warn("Stew: you should use std::bitswap.");
 
 namespace StewLib
 {
-    namespace
+    template<typename T>
+    struct ReverseBuffer final
     {
-        template<typename T>
-        struct ReverseBuffer final
+        constexpr static std::size_t size = sizeof(T);
+        std::byte buffer[size]{};
+        bool is_reversed{false};
+
+        ReverseBuffer() = default;
+        ReverseBuffer(const ReverseBuffer&) = default;
+        ReverseBuffer& operator=(const ReverseBuffer&) = default;
+        ReverseBuffer(ReverseBuffer&&) = default;
+        ReverseBuffer& operator=(ReverseBuffer&&) = default;
+
+        ReverseBuffer(const low_cost_ref_val_t<T> obj) noexcept
         {
-            constexpr static std::size_t size = sizeof(T);
-            std::byte buffer[size]{};
-            bool is_reversed{false};
+            std::memcpy(buffer, &obj, size);
+        }
 
-            ReverseBuffer() = default;
-            ReverseBuffer(const ReverseBuffer&) = default;
-            ReverseBuffer& operator=(const ReverseBuffer&) = default;
-            ReverseBuffer(ReverseBuffer&&) = default;
-            ReverseBuffer& operator=(ReverseBuffer&&) = default;
-
-            ReverseBuffer(const low_cost_ref_val_t<T> obj) noexcept
+        void reverse() noexcept
+        {
+            if constexpr(size > /* TODO: */100)
             {
-                std::memcpy(buffer, &obj, size);
+                std::reverse(std::execution::par_unseq, buffer, buffer + size);
+            }
+            else
+            {
+                std::reverse(std::execution::seq, buffer, buffer + size);
             }
 
-            void reverse() noexcept
-            {
-                if constexpr(size > /* TODO: */100)
-                {
-                    std::reverse(std::execution::par_unseq, buffer, buffer + size);
-                }
-                else
-                {
-                    std::reverse(std::execution::seq, buffer, buffer + size);
-                }
+            is_reversed = !is_reversed;
+        }
 
-                is_reversed = !is_reversed;
-            }
-
-            explicit operator T() const noexcept
-            {
-                T ret;
-                std::memcpy(&ret, buffer, sizeof(T));
-                return ret;
-            }
-        };
-    }
+        explicit operator T() const noexcept
+        {
+            T ret;
+            std::memcpy(&ret, buffer, sizeof(T));
+            return ret;
+        }
+    };
 }

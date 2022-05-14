@@ -7,15 +7,12 @@
 
 namespace StewLib
 {
-    namespace
+    template<typename T, T value_>
+    #ifdef __cpp_concepts
+    requires std::integral<T> && std::same_as<T, std::remove_cvref_t<T>>
+    #endif
+    struct IntegerHolder final
     {
-        template<typename T, T value_>
-#ifdef __cpp_concepts
-        requires std::integral<T> && std::same_as<T, std::remove_cvref_t<T>>
-#endif
-        struct IntegerHolder final
-        {
-            static constexpr T value = value_;
-        };
-    }
+        static constexpr T value = value_;
+    };
 }

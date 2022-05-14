@@ -13,156 +13,153 @@ operator.()はオーバーロードできない！
 
 namespace StewLib
 {
-    namespace
+    // コピー、ムーブ構築・代入が可能な参照型
+    template<class T>
+    struct Ref final
     {
-        // コピー、ムーブ構築・代入が可能な参照型
-        template<class T>
-        struct Ref final
+    private:
+        T *const p{nullptr};
+
+    public:
+        constexpr Ref(T& obj) noexcept:
+            p{std::addressof(obj)}
+        {}
+
+        Ref() = delete;
+        Ref(const Ref&) = default;
+        Ref(Ref&&) = default;
+        ~Ref() = default;
+
+        // T& operator=(const Ref& ref) noexcept
+        // {
+        //     if(std::addressof(ref) == this)
+        //     {
+        //         return *p;
+        //     }
+
+        //     p = ref.p;
+
+        //     return *p;
+        // }
+
+        // T& operator=(Ref&& ref) noexcept
+        // {
+        //     if(std::addressof(ref) == this)
+        //     {
+        //         return *p;
+        //     }
+
+        //     p = ref.p;
+
+        //     return *p;
+        // }
+
+        // 演算子でない関数もこうするつもりか？キリがない。
+        T& operator=(const low_cost_ref_val_t<T> obj)
         {
-        private:
-            T *const p{nullptr};
+            *p = obj;
+            return *p;
+        }
 
-        public:
-            constexpr Ref(T& obj) noexcept:
-                p{std::addressof(obj)}
-            {}
+        // T& operator+=(const low_cost_ref_val_t<T> obj)
+        // {
+        //     *p += obj;
+        //     return *p;
+        // }
 
-            Ref() = delete;
-            Ref(const Ref&) = default;
-            Ref(Ref&&) = default;
-            ~Ref() = default;
+        // T& operator-=(const low_cost_ref_val_t<T> obj)
+        // {
+        //     *p -= obj;
+        //     return *p;
+        // }
 
-            // T& operator=(const Ref& ref) noexcept
-            // {
-            //     if(std::addressof(ref) == this)
-            //     {
-            //         return *p;
-            //     }
+        // T& operator*=(const low_cost_ref_val_t<T> obj)
+        // {
+        //     *p *= obj;
+        //     return *p;
+        // }
 
-            //     p = ref.p;
+        // T& operator%=(const low_cost_ref_val_t<T> obj)
+        // {
+        //     *p %= obj;
+        //     return *p;
+        // }
 
-            //     return *p;
-            // }
+        // T& operator/=(const low_cost_ref_val_t<T> obj)
+        // {
+        //     *p /= obj;
+        //     return *p;
+        // }
 
-            // T& operator=(Ref&& ref) noexcept
-            // {
-            //     if(std::addressof(ref) == this)
-            //     {
-            //         return *p;
-            //     }
+        // T& operator<<=(const low_cost_ref_val_t<T> obj)
+        // {
+        //     *p <<= obj;
+        //     return *p;
+        // }
 
-            //     p = ref.p;
+        // T& operator>>=(const low_cost_ref_val_t<T> obj)
+        // {
+        //     *p >>= obj;
+        //     return *p;
+        // }
 
-            //     return *p;
-            // }
+        // T& operator&=(const low_cost_ref_val_t<T> obj)
+        // {
+        //     *p &= obj;
+        //     return *p;
+        // }
 
-            // 演算子でない関数もこうするつもりか？キリがない。
-            T& operator=(const low_cost_ref_val_t<T> obj)
-            {
-                *p = obj;
-                return *p;
-            }
+        // T& operator|=(const low_cost_ref_val_t<T> obj)
+        // {
+        //     *p |= obj;
+        //     return *p;
+        // }
 
-            // T& operator+=(const low_cost_ref_val_t<T> obj)
-            // {
-            //     *p += obj;
-            //     return *p;
-            // }
+        // T& operator^=(const low_cost_ref_val_t<T> obj)
+        // {
+        //     *p ^= obj;
+        //     return *p;
+        // }
 
-            // T& operator-=(const low_cost_ref_val_t<T> obj)
-            // {
-            //     *p -= obj;
-            //     return *p;
-            // }
+        // T operator++(int)
+        // {
+        //     (*p)++;
+        //     return *p;
+        // }
 
-            // T& operator*=(const low_cost_ref_val_t<T> obj)
-            // {
-            //     *p *= obj;
-            //     return *p;
-            // }
+        // T operator--(int)
+        // {
+        //     (*p)--;
+        //     return *p;
+        // }
 
-            // T& operator%=(const low_cost_ref_val_t<T> obj)
-            // {
-            //     *p %= obj;
-            //     return *p;
-            // }
+        // T& operator++()
+        // {
+        //     ++(*p);
+        //     return *p;
+        // }
 
-            // T& operator/=(const low_cost_ref_val_t<T> obj)
-            // {
-            //     *p /= obj;
-            //     return *p;
-            // }
+        // T& operator--()
+        // {
+        //     --(*p);
+        //     return *p;
+        // }
 
-            // T& operator<<=(const low_cost_ref_val_t<T> obj)
-            // {
-            //     *p <<= obj;
-            //     return *p;
-            // }
+        T* operator&() const noexcept
+        {
+            return p;
+        }
 
-            // T& operator>>=(const low_cost_ref_val_t<T> obj)
-            // {
-            //     *p >>= obj;
-            //     return *p;
-            // }
+        // operator T() const noexcept
+        // {
+        //     return *p;
+        // }
 
-            // T& operator&=(const low_cost_ref_val_t<T> obj)
-            // {
-            //     *p &= obj;
-            //     return *p;
-            // }
-
-            // T& operator|=(const low_cost_ref_val_t<T> obj)
-            // {
-            //     *p |= obj;
-            //     return *p;
-            // }
-
-            // T& operator^=(const low_cost_ref_val_t<T> obj)
-            // {
-            //     *p ^= obj;
-            //     return *p;
-            // }
-
-            // T operator++(int)
-            // {
-            //     (*p)++;
-            //     return *p;
-            // }
-
-            // T operator--(int)
-            // {
-            //     (*p)--;
-            //     return *p;
-            // }
-
-            // T& operator++()
-            // {
-            //     ++(*p);
-            //     return *p;
-            // }
-
-            // T& operator--()
-            // {
-            //     --(*p);
-            //     return *p;
-            // }
-
-            T* operator&() const noexcept
-            {
-                return p;
-            }
-
-            // operator T() const noexcept
-            // {
-            //     return *p;
-            // }
-
-            operator T&() const noexcept
-            {
-                return *p;
-            }
-        };
-    }
+        operator T&() const noexcept
+        {
+            return *p;
+        }
+    };
 }
 
 #endif
