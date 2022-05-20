@@ -68,11 +68,11 @@ namespace StewLib
 
             template<typename T2>
             constexpr Vec2D& operator=(const Vec2D<T2>& obj) noexcept
-                {
-                    x = obj.x;
-                    y = obj.y;
-                    return *this;
-                }
+            {
+                x = obj.x;
+                y = obj.y;
+                return *this;
+            }
 
             template<typename T2>
             constexpr Vec2D(Vec2D<T2>&& obj) noexcept:
