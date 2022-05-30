@@ -32,6 +32,8 @@ namespace StewLib
 
         constexpr RefCount& operator =(const RefCount& obj) noexcept
         {
+            if(std::addressof(obj) == this) return *this;
+
             if(count_dp && !--*count_dp) delete count_dp;
             count_dp = obj.count_dp;
             if(count_dp) ++*count_dp;
