@@ -10,6 +10,6 @@ namespace StewLib
 #endif
     constexpr std::underlying_type_t<T> to_underlying(T value) noexcept
     {
-        return static_cast<underlying_type_t<T>>(value);
+        return static_cast<std::underlying_type_t<T>>(value);
     }
 }
