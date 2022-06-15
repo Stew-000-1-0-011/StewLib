@@ -56,7 +56,7 @@ namespace StewLib
         constexpr CompileForIter() = default;
     };
 
-    namespace Implement::CompileFor
+    namespace Implement::CompileForImp
     {
 #ifdef __cpp_concepts
         template<class T>
@@ -89,6 +89,6 @@ namespace StewLib
     template<class BodyF, class Iter>
     constexpr void compile_for(BodyF&& body_f, Iter&& iter) noexcept
     {
-        Implement::CompileFor::run(body_f, std::forward<Iter>(iter));
+        Implement::CompileForImp::run(body_f, std::forward<Iter>(iter));
     }
 }

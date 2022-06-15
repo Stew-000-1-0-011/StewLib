@@ -9,7 +9,7 @@
 
 namespace StewLib
 {
-    namespace Implement::Pipeline
+    namespace Implement::PipelineImp
     {
         template<class Func>
         struct FuncAdapter final
@@ -34,10 +34,10 @@ namespace StewLib
     template<class ... Func>
     class Pipeline final
     {
-        std::tuple<Implement::Pipeline::FuncAdapter<Func> ...> funcs;
+        std::tuple<Implement::PipelineImp::FuncAdapter<Func> ...> funcs;
 
     public:
-        consteval Pipeline(const Implement::Pipeline::FuncAdapter<Func>& ... funcs):
+        consteval Pipeline(const Implement::PipelineImp::FuncAdapter<Func>& ... funcs):
             funcs{funcs ...}
         {}
 
