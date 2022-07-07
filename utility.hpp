@@ -6,14 +6,16 @@ namespace StewLib
 {
     // 任意の型について、が書けないものか。
     template<class F>
-    // concept IsPredC = requires(F pred){{pred.template operator()<>()} -> std::same_as<bool>;};
     concept IsPred = true;
+    // concept IsPred = requires(F pred){{pred.template operator()<AllType>()} -> std::same_as<bool>;};
 
     template<IsPred auto pred, class ... Ts>
     inline constexpr bool is_only_one = (pred.template operator()<Ts>() + ...) == 1;
 
     template<IsPred auto pred, class ... Ts>
     inline constexpr bool is_all = (pred.template operator()<Ts>() && ...);
+
+    inline constexpr auto empty_pred = []<class T>(){return true;};
 
     inline constexpr auto empty_lambda = []<class T>(){};
 
