@@ -116,8 +116,6 @@ namespace StewLib
         template<IsTag Tag_>
         struct NonDummyHolder final : NonDummyHolderBase
         {
-        // debug
-        // private:
             using Type = typename Tag_::Type;
             Type value;
 
