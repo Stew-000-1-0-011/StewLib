@@ -1,21 +1,21 @@
-#pragma once
+/// TODO: n次元に拡張、LocalGlobalに対応
 
-#include "vec2d.hpp"
+ｗ#pragma once
 
-namespace StewLib
+#include "../noexcept_auto.hpp"
+
+namespace StewLib::Math
 {
-    namespace Math
+    template<class Point>
+    struct Circle final
     {
-        template<typename T>
-        struct Circle final
-        {
-            Vec2D<T>{};
-            T range{};
+        Point center{};
+        typename Point::Type range{};
 
-            constexpr bool is_in(const low_cost_ref_val_t<Vec2D<T>> point) const noexcept
-            {
-                return norm2(point - center) <= range * range;
-            }
-        };
-    }
+        template<>
+        constexpr bool is_in(const Point& point) const Stew_noexcept_auto
+        {
+            return norm2(point.get() - center.get()) <= range * range;
+        }
+    };
 }

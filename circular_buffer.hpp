@@ -1,5 +1,3 @@
-// boostに慣れたらboostのcircular_bufferを使うべきかも。
-
 /*
 バッファの動的拡張をサポートしたりしたい。
 多分バッファの終端を直に.end()でとるのではなく、現在のリングバッファの終端を保持しておき、
@@ -55,22 +53,20 @@ namespace StewLib
         {
             --count;
 
-            if(--iter == buffer.begin() - 1)
+            auto&& ret = std::move(*iter);
+
+            if(iter == buffer.begin())
             {
                 iter = buffer.end() - 1;
             }
+            else --iter;
 
-            return std::move(*iter);
+            return ret;
         }
 
         void clear() noexcept
         {
             count = 0;
-        }
-        
-        BufferType& get_buffer() noexcept
-        {
-            return buffer;
         }
     };
 
@@ -121,17 +117,15 @@ namespace StewLib
 
             --count;
 
-            if(--iter == buffer.begin() - 1)
+            auto&& ret = std::move(*iter);
+
+            if(iter == buffer.begin())
             {
                 iter = buffer.end() - 1;
             }
+            else --iter;
 
-            return std::move(*iter);
-        }
-        
-        BufferType& get_buffer() noexcept
-        {
-            return buffer;
+            return ret;
         }
 
         void clear() noexcept

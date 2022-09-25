@@ -1,3 +1,5 @@
+/// TODO: n次元に拡張、LocalGlobalに対応
+
 #pragma once
 
 #include <vector>

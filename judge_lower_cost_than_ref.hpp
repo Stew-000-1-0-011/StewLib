@@ -2,6 +2,8 @@
 
 #include "static_warn.hpp"
 
+Stew_static_warn(true, "This header is deprecated. It's too complicated. Let the compiler do the work.");
+
 #include <type_traits>
 
 /// TODO: ビット環境を指定

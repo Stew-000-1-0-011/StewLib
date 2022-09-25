@@ -20,22 +20,22 @@ namespace StewLib
         struct DummyHolderBase{};
 
         template<class T>
-        concept IsNonAutoTag = std::derived_from<std::remove_cvref_t<T>, Implement::NamedParamImp::NonAutoTagBase>;
+        concept IsNonAutoTag = std::is_base_of_v<Implement::NamedParamImp::NonAutoTagBase, std::remove_cvref_t<T>>;
 
         template<class T>
-        concept IsForwardRefTag = std::derived_from<std::remove_cvref_t<T>, Implement::NamedParamImp::ForwardRefTagBase>;
+        concept IsForwardRefTag = std::is_base_of_v<Implement::NamedParamImp::ForwardRefTagBase, std::remove_cvref_t<T>>;
 
         template<class T>
         concept IsTag = IsNonAutoTag<T> || IsForwardRefTag<T>;
 
         template<class T>
-        concept IsWithDefaultValue = std::derived_from<std::remove_cvref_t<T>, Implement::NamedParamImp::WithDefaultValueBase>;
+        concept IsWithDefaultValue = std::is_base_of_v<Implement::NamedParamImp::WithDefaultValueBase, std::remove_cvref_t<T>>;
 
         template<class T>
-        concept IsNonDummyHolder = std::derived_from<std::remove_cvref_t<T>, Implement::NamedParamImp::NonDummyHolderBase>;
+        concept IsNonDummyHolder = std::is_base_of_v<Implement::NamedParamImp::NonDummyHolderBase, std::remove_cvref_t<T>>;
 
         template<class T>
-        concept IsDummyHolder = std::derived_from<std::remove_cvref_t<T>, Implement::NamedParamImp::DummyHolderBase>;
+        concept IsDummyHolder = std::is_base_of_v<Implement::NamedParamImp::DummyHolderBase, std::remove_cvref_t<T>>;
 
         template<class T>
         concept IsHolder = IsNonDummyHolder<T> || IsDummyHolder<T>;
@@ -316,40 +316,22 @@ namespace StewLib
     using Implement::NamedParamImp::IsHolder;
 }
 
-#if 0
-#define stew_define_named_parameter(name, type)\
-using name##_tag = StewLib::Implement::NamedParamImp::Tag<struct impl_##name##_tag_name, type>;\
-inline static const name##_tag name{}
-
-#define stew_define_named_auto_parameter(name, ...)\
-using name##_tag = StewLib::Implement::NamedParamImp::Tag<struct impl_##name##_tag_name, StewLib::Implement::NamedParamImp::ForwardRef __VA_OPT__(, __VA_ARGS__)>;\
-inline static const name##_tag name{}
-
-#define stew_define_named_parameter_with_default(name, type, default_factory_)\
-using name##_tag = StewLib::Implement::NamedParamImp::TagWithDefault<struct impl_##name##_tag_name, type, default_factory_>;\
-inline static const name##_tag name{}
-
-#define stew_define_named_auto_parameter_with_default(name, default_factory_, ...)\
-using name##_tag = StewLib::Implement::NamedParamImp::TagWithDefault<struct impl_##name##_tag_name, StewLib::Implement::NamedParamImp::ForwardRef, default_factory_ __VA_OPT__(, __VA_ARGS__)>;\
-inline static const name##_tag name{}
-#endif
-
-#define stew_define_named_parameter(name, type)\
+#define Stew_define_named_parameter(name, type)\
 inline static constexpr StewLib::Implement::NamedParamImp::Tag<struct impl_##name##_tag_name, type> name{}
 
-#define stew_define_named_auto_parameter(name, ...)\
+#define Stew_define_named_auto_parameter(name, ...)\
 inline static constexpr StewLib::Implement::NamedParamImp::Tag<struct impl_##name##_tag_name, StewLib::Implement::NamedParamImp::ForwardRef __VA_OPT__(, __VA_ARGS__)> name{}
 
-#define stew_define_named_parameter_with_default_inner(name, type, default_factory_)\
+#define Stew_define_named_parameter_with_default_inner(name, type, default_factory_)\
 inline static constexpr StewLib::Implement::NamedParamImp::TagWithDefault<struct impl_##name##_tag_name, type, default_factory_> name{}
 
-#define stew_define_named_auto_parameter_with_default_inner(name, default_factory_, ...)\
+#define Stew_define_named_auto_parameter_with_default_inner(name, default_factory_, ...)\
 inline static constexpr StewLib::Implement::NamedParamImp::TagWithDefault<struct impl_##name##_tag_name, StewLib::Implement::NamedParamImp::ForwardRef, default_factory_ __VA_OPT__(, __VA_ARGS__)> name{}
 
-#define stew_define_named_parameter_with_default(name, type, lambda)\
+#define Stew_define_named_parameter_with_default(name, type, lambda)\
 inline static constexpr auto name##_default = lambda;\
-stew_define_named_parameter_with_default_inner(name, type, name##_default)
+Stew_define_named_parameter_with_default_inner(name, type, name##_default)
 
-#define stew_define_named_auto_parameter_with_default(name, lambda, ...)\
+#define Stew_define_named_auto_parameter_with_default(name, lambda, ...)\
 inline static constexpr auto name##_default = lambda;\
-stew_define_named_auto_parameter_with_default_inner(name, name##_default __VA_OPT__(, __VA_ARGS__))
+Stew_define_named_auto_parameter_with_default_inner(name, name##_default __VA_OPT__(, __VA_ARGS__))
